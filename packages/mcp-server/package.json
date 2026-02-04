@@ -1,11 +1,11 @@
 {
-    "name": "@next-ai-drawio/mcp-server",
+    "name": "ost-draw-io-mcp-server",
     "version": "0.1.15",
-    "description": "MCP server for Next AI Draw.io - AI-powered diagram generation with real-time browser preview",
+    "description": "MCP server for OST Draw.io - Opportunity Solution Tree diagram generation with real-time browser preview",
     "type": "module",
     "main": "dist/index.js",
     "bin": {
-        "next-ai-drawio-mcp": "./dist/index.js"
+        "ost-draw-io-mcp": "./dist/index.js"
     },
     "scripts": {
         "build": "tsc",
@@ -28,7 +28,7 @@
         "url": "https://github.com/DayuanJiang/next-ai-draw-io",
         "directory": "packages/mcp-server"
     },
-    "homepage": "https://next-ai-drawio.jiang.jp",
+    "homepage": "https://ost-draw-io.example.com",
     "bugs": {
         "url": "https://github.com/DayuanJiang/next-ai-draw-io/issues"
     },

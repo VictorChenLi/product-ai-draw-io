@@ -61,7 +61,7 @@ let currentSession: {
 
 // Create MCP server
 const server = new McpServer({
-    name: "next-ai-drawio",
+    name: "ost-drawio",
     version: "0.1.2",
 })
 
