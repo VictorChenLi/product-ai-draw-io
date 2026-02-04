@@ -2,7 +2,7 @@
 
 <div align="center">
 
-**Opportunity Solution Tree diagramming – upload context and problem statement, generate OST with AI**
+**Opportunity Solution Tree diagramming — upload context and problem statement, generate OST with AI**
 
 English | [中文](./docs/cn/README_CN.md) | [日本語](./docs/ja/README_JA.md)
 
@@ -12,97 +12,79 @@ English | [中文](./docs/cn/README_CN.md) | [日本語](./docs/ja/README_JA.md)
 
 </div>
 
-OST Draw.io is a Next.js app for generating **Opportunity Solution Trees (OST)** from context documents and problem statements. It is based on [next-ai-draw-io](https://github.com/DayuanJiang/next-ai-draw-io) and rebranded for OST-focused diagramming.
+---
 
-**Plan & PRD:** [PRD](./PRD-ost-whiteboard-on-next-ai-draw-io.md) · [Implementation plan](./PLAN-ost-draw-io-architecture.md)
+**OST Draw.io** is a web app for creating **Opportunity Solution Trees (OST)** with AI. Upload a context document (PDF, text) and a problem statement; the app uses an LLM to generate a draw.io-style OST diagram. You can then refine it via chat and edit it on the canvas.
 
-**If you see `Can't resolve 'tailwindcss'`:** Run `npm run dev` from the **project root** (the folder that contains `package.json` and `postcss.config.mjs`). Open this folder in Cursor/VS Code (not the parent or a copy in Trash), then run the dev server from the integrated terminal.
+- **OST-first flow:** Paste or type your problem statement, optionally attach context files, and send — the first message triggers OST generation with the right system prompt and diagram output.
+- **General diagramming:** The same chat + canvas supports other diagrams (flowcharts, cloud architecture, etc.) via natural language.
 
-> Note: Thanks to <img src="https://raw.githubusercontent.com/DayuanJiang/next-ai-draw-io/main/public/doubao-color.png" alt="" height="20" /> [ByteDance Doubao](https://www.volcengine.com/activity/newyear-referral?utm_campaign=doubao&utm_content=aidrawio&utm_medium=github&utm_source=coopensrc&utm_term=project) sponsorship, the demo site now uses the powerful K2-thinking model!
+Built on [next-ai-draw-io](https://github.com/DayuanJiang/next-ai-draw-io). Implementation plan: [context/PLAN-ost-draw-io-architecture.md](./context/PLAN-ost-draw-io-architecture.md).
 
+**Run from project root:** Open this repo in your editor (the folder with `package.json`), then run `npm run dev` from the integrated terminal. If you see `Can't resolve 'tailwindcss'`, you're likely not in the project root.
 
-https://github.com/user-attachments/assets/9d60a3e8-4a1c-4b5e-acbb-26af2d3eabd1
-
-
+---
 
 ## Table of Contents
-- [OST Draw.io](#ost-drawio)
-  - [Table of Contents](#table-of-contents)
-  - [Examples](#examples)
-  - [Features](#features)
-  - [MCP Server (Preview)](#mcp-server-preview)
-    - [Claude Code CLI](#claude-code-cli)
-  - [Getting Started](#getting-started)
-    - [Try it Online](#try-it-online)
-    - [Desktop Application](#desktop-application)
-    - [Run with Docker](#run-with-docker)
-    - [Installation](#installation)
-  - [Deployment](#deployment)
-    - [Deploy to EdgeOne Pages](#deploy-to-edgeone-pages)
-    - [Deploy on Vercel](#deploy-on-vercel)
-    - [Deploy on Cloudflare Workers](#deploy-on-cloudflare-workers)
-  - [Multi-Provider Support](#multi-provider-support)
-  - [How It Works](#how-it-works)
-  - [Support \& Contact](#support--contact)
-  - [FAQ](#faq)
-  - [Star History](#star-history)
 
-## Examples
+- [Features](#features)
+- [Getting Started](#getting-started)
+- [MCP Server (Preview)](#mcp-server-preview)
+- [Deployment](#deployment)
+- [AI Providers](#ai-providers)
+- [How It Works](#how-it-works)
+- [FAQ & Support](#faq--support)
 
-Here are some example prompts and their generated diagrams:
-
-<div align="center">
-<table width="100%">
-  <tr>
-    <td colspan="2" valign="top" align="center">
-      <strong>Animated transformer connectors</strong><br />
-      <p><strong>Prompt:</strong> Give me a **animated connector** diagram of transformer's architecture.</p>
-      <img src="./public/animated_connectors.svg" alt="Transformer Architecture with Animated Connectors" width="480" />
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <strong>GCP architecture diagram</strong><br />
-      <p><strong>Prompt:</strong> Generate a GCP architecture diagram with **GCP icons**. In this diagram, users connect to a frontend hosted on an instance.</p>
-      <img src="./public/gcp_demo.svg" alt="GCP Architecture Diagram" width="480" />
-    </td>
-    <td width="50%" valign="top">
-      <strong>AWS architecture diagram</strong><br />
-      <p><strong>Prompt:</strong> Generate a AWS architecture diagram with **AWS icons**. In this diagram, users connect to a frontend hosted on an instance.</p>
-      <img src="./public/aws_demo.svg" alt="AWS Architecture Diagram" width="480" />
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <strong>Azure architecture diagram</strong><br />
-      <p><strong>Prompt:</strong> Generate a Azure architecture diagram with **Azure icons**. In this diagram, users connect to a frontend hosted on an instance.</p>
-      <img src="./public/azure_demo.svg" alt="Azure Architecture Diagram" width="480" />
-    </td>
-    <td width="50%" valign="top">
-      <strong>Cat sketch prompt</strong><br />
-      <p><strong>Prompt:</strong> Draw a cute cat for me.</p>
-      <img src="./public/cat_demo.svg" alt="Cat Drawing" width="240" />
-    </td>
-  </tr>
-</table>
-</div>
+---
 
 ## Features
 
--   **LLM-Powered Diagram Creation**: Leverage Large Language Models to create and manipulate draw.io diagrams directly through natural language commands
--   **Image-Based Diagram Replication**: Upload existing diagrams or images and have the AI replicate and enhance them automatically
--   **PDF & Text File Upload**: Upload PDF documents and text files to extract content and generate diagrams from existing documents
--   **AI Reasoning Display**: View the AI's thinking process for supported models (OpenAI o1/o3, Gemini, Claude, etc.)
--   **Diagram History**: Comprehensive version control that tracks all changes, allowing you to view and restore previous versions of your diagrams before the AI editing.
--   **Interactive Chat Interface**: Communicate with AI to refine your diagrams in real-time
--   **Cloud Architecture Diagram Support**: Specialized support for generating cloud architecture diagrams (AWS, GCP, Azure)
--   **Animated Connectors**: Create dynamic and animated connectors between diagram elements for better visualization
+- **OST-first generation** — Problem statement + optional context (PDF/text) → AI generates an Opportunity Solution Tree as a draw.io diagram. First message uses an OST-optimized system prompt.
+- **Chat-driven editing** — Refine the diagram in natural language; the AI can update or extend the OST.
+- **File upload** — Attach PDFs and text files for context; content is extracted and included in the prompt.
+- **AI reasoning (CoT)** — For supported models (OpenAI o1/o3, Gemini, Claude, etc.), the app can show the model’s reasoning before the diagram.
+- **Diagram history** — View and restore previous diagram versions.
+- **Multi-provider AI** — Use OpenAI, Anthropic, Google, Azure, Ollama, DeepSeek, and others (see [AI Providers](#ai-providers)).
+- **Desktop app** — Electron build for Windows, macOS, and Linux.
+
+---
+
+## Getting Started
+
+### Run locally
+
+1. **Clone and install**
+
+   ```bash
+   git clone https://github.com/VictorChenLi/product-ai-draw-io.git
+   cd product-ai-draw-io
+   npm install
+   cp env.example .env.local
+   ```
+
+2. **Configure an AI provider** in `.env.local` (see [env.example](./env.example) and [Provider Configuration Guide](./docs/en/ai-providers.md)).
+
+3. **Start the dev server**
+
+   ```bash
+   npm run dev
+   ```
+
+4. Open [http://localhost:6002](http://localhost:6002). Enter a problem statement (and optionally attach context files), then send to generate your first OST.
+
+### Desktop app
+
+Download the native app for your platform from the [Releases](https://github.com/VictorChenLi/product-ai-draw-io/releases) page (when available). Supports Windows, macOS, and Linux.
+
+### Docker
+
+See the [Docker guide](./docs/en/docker.md) for running with Docker.
+
+---
 
 ## MCP Server (Preview)
 
-> **Preview Feature**: This feature is experimental and may not be stable.
-
-Use Next AI Draw.io with AI agents like Claude Desktop, Cursor, and VS Code via MCP (Model Context Protocol).
+Use OST Draw.io from AI agents (e.g. Claude Desktop, Cursor) via MCP:
 
 ```json
 {
@@ -115,148 +97,39 @@ Use Next AI Draw.io with AI agents like Claude Desktop, Cursor, and VS Code via 
 }
 ```
 
-### Claude Code CLI
+See the [MCP Server README](./packages/mcp-server/README.md) for details.
 
-```bash
-claude mcp add drawio -- npx @next-ai-drawio/mcp-server@latest
-```
-
-Then ask Claude to create diagrams:
-> "Create a flowchart showing user authentication with login, MFA, and session management"
-
-The diagram appears in your browser in real-time!
-
-See the [MCP Server README](./packages/mcp-server/README.md) for VS Code, Cursor, and other client configurations.
-
-## Getting Started
-
-### Try it Online
-
-No installation needed! Try the app directly on our demo site:
-
-[![Live Demo](./public/live-demo-button.svg)](https://next-ai-drawio.jiang.jp/)
-
-
-
-> **Bring Your Own API Key**: You can use your own API key to bypass usage limits on the demo site. Click the Settings icon in the chat panel to configure your provider and API key. Your key is stored locally in your browser and is never stored on the server.
-
-### Desktop Application
-
-Download the native desktop app for your platform from the [Releases page](https://github.com/DayuanJiang/next-ai-draw-io/releases):
-
-Supported platforms: Windows, macOS, Linux.
-
-### Run with Docker
-
-[Go to Docker Guide](./docs/en/docker.md)
-
-### Installation
-
-1. Clone the repository:
-
-```bash
-git clone https://github.com/DayuanJiang/next-ai-draw-io
-cd next-ai-draw-io
-npm install
-cp env.example .env.local
-```
-
-See the [Provider Configuration Guide](./docs/en/ai-providers.md) for detailed setup instructions for each provider.
-
-2. Run the development server:
-
-```bash
-npm run dev
-```
-
-3. Open [http://localhost:6002](http://localhost:6002) in your browser to see the application.
+---
 
 ## Deployment
 
-### Deploy to EdgeOne Pages
+- **Vercel** — Clone this repo, connect to Vercel, and set the same env vars as in `.env.local`. See [Next.js deployment docs](https://nextjs.org/docs/app/building-your-application/deploying).
+- **Cloudflare Workers** — [Cloudflare deploy guide](./docs/en/cloudflare-deploy.md).
+- **EdgeOne Pages** — [EdgeOne Pages](https://pages.edgeone.ai/) supports one-click deploy from a Git repo.
 
-You can deploy with one click using [Tencent EdgeOne Pages](https://pages.edgeone.ai/).
+---
 
-Deploy by this button: 
+## AI Providers
 
-[![Deploy to EdgeOne Pages](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2FDayuanJiang%2Fnext-ai-draw-io)
+Supported providers include: OpenAI, Anthropic, Google AI, Google Vertex AI, Azure OpenAI, AWS Bedrock, Ollama, OpenRouter, DeepSeek, ByteDance Doubao, SiliconFlow, ModelScope, SGLang, Vercel AI Gateway. Custom endpoints are supported for most (except AWS Bedrock and OpenRouter).
 
-Check out the [Tencent EdgeOne Pages documentation](https://pages.edgeone.ai/document/deployment-overview) for more details.
+📖 **[Provider Configuration Guide](./docs/en/ai-providers.md)** — Setup per provider.
 
-Additionally, deploying through Tencent EdgeOne Pages will also grant you a [daily free quota for DeepSeek models](https://pages.edgeone.ai/document/edge-ai).
+**Server-side models:** Admins can configure models via `AI_MODELS_CONFIG` (env) or `ai-models.json`, so users don’t need their own API keys. For OST and diagram generation, stronger models (e.g. Claude Sonnet, GPT-4, Gemini Pro, DeepSeek) are recommended because of the structured draw.io XML output.
 
-### Deploy on Vercel 
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FDayuanJiang%2Fnext-ai-draw-io)
-
-The easiest way to deploy is using [Vercel](https://vercel.com/new), the creators of Next.js. Be sure to **set the environment variables** in the Vercel dashboard as you did in your local `.env.local` file.
-
-See the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-### Deploy on Cloudflare Workers
-
-[Go to Cloudflare Deploy Guide](./docs/en/cloudflare-deploy.md)
-
-
-
-## Multi-Provider Support
-
--   [ByteDance Doubao](https://www.volcengine.com/activity/newyear-referral?utm_campaign=doubao&utm_content=aidrawio&utm_medium=github&utm_source=coopensrc&utm_term=project)
--   AWS Bedrock (default)
--   OpenAI
--   Anthropic
--   Google AI
--   Google Vertex AI
--   Azure OpenAI
--   Ollama
--   OpenRouter
--   DeepSeek
--   SiliconFlow
--   ModelScope
--   SGLang
--   Vercel AI Gateway
-
-
-All providers except AWS Bedrock and OpenRouter support custom endpoints.
-
-📖 **[Detailed Provider Configuration Guide](./docs/en/ai-providers.md)** - See setup instructions for each provider.
-
-### Server-Side Multi-Model Configuration
-
-Administrators can configure multiple server-side models that are available to all users without requiring personal API keys. Configure via `AI_MODELS_CONFIG` environment variable (JSON string) or `ai-models.json` file.
-
-**Model Requirements**: This task requires strong model capabilities for generating long-form text with strict formatting constraints (draw.io XML). Recommended models include Claude Sonnet 4.5, GPT-5.1, Gemini 3 Pro, and DeepSeek V3.2/R1.
-
-Note that the `claude` series has been trained on draw.io diagrams with cloud architecture logos like AWS, Azure, GCP. So if you want to create cloud architecture diagrams, this is the best choice.
-
+---
 
 ## How It Works
 
-The application uses the following technologies:
-
--   **Next.js**: For the frontend framework and routing
--   **Vercel AI SDK** (`ai` + `@ai-sdk/*`): For streaming AI responses and multi-provider support
--   **react-drawio**: For diagram representation and manipulation
-
-Diagrams are represented as XML that can be rendered in draw.io. The AI processes your commands and generates or modifies this XML accordingly.
-
-
-## Support & Contact
-
-**Special thanks to [ByteDance Doubao](https://www.volcengine.com/activity/newyear-referral?utm_campaign=doubao&utm_content=aidrawio&utm_medium=github&utm_source=coopensrc&utm_term=project) for sponsoring the API token usage of the demo site!** Register on the ARK platform to get 500K free tokens for all models!
-
-If you find this project useful, please consider [sponsoring](https://github.com/sponsors/DayuanJiang) to help me host the live demo site!
-
-For support or inquiries, please open an issue on the GitHub repository or contact the maintainer at:
-
--   Email: me[at]jiang.jp
-
-## FAQ
-
-See [FAQ](./docs/en/FAQ.md) for common issues and solutions.
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=DayuanJiang/next-ai-draw-io&type=date&legend=top-left)](https://www.star-history.com/#DayuanJiang/next-ai-draw-io&type=date&legend=top-left)
+- **Stack:** Next.js, [Vercel AI SDK](https://sdk.vercel.ai/) (`ai` + `@ai-sdk/*`), [react-drawio](https://github.com/nicholasgriffintn/react-drawio) for the canvas.
+- **Diagrams** are draw.io XML; the AI returns or edits this XML, and the app renders it on the canvas.
+- **OST flow:** For the first user message with an empty diagram, the chat API uses an OST system prompt and expects a diagram tool call; the response is parsed and loaded into the canvas (with automatic wrapping when the model returns bare mxCell XML).
 
 ---
+
+## FAQ & Support
+
+- **FAQ:** [docs/en/FAQ.md](./docs/en/FAQ.md)
+- **Issues:** [GitHub Issues](https://github.com/VictorChenLi/product-ai-draw-io/issues)
+
+This project is a fork of [next-ai-draw-io](https://github.com/DayuanJiang/next-ai-draw-io), rebranded and extended for Opportunity Solution Tree diagramming.
