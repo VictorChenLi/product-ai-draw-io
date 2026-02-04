@@ -45,46 +45,45 @@ export async function generateMetadata({
         rawLang in { en: 1, zh: 1, ja: 1, "zh-Hant": 1 } ? rawLang : "en"
     ) as Locale
 
-    // Default to English metadata
+    // OST Draw.io metadata (base URL: set to your deployment domain)
+    const baseUrl = "https://ost-draw-io.example.com"
     const titles: Record<Locale, string> = {
-        en: "Next AI Draw.io - AI-Powered Diagram Generator",
-        zh: "Next AI Draw.io - AI powered diagram generator",
-        ja: "Next AI Draw.io - AI-powered diagram generator",
-        "zh-Hant": "Next AI Draw.io - AI 驅動的圖表產生器",
+        en: "OST Draw.io – Opportunity Solution Tree diagramming",
+        zh: "OST Draw.io – 機會解決樹圖表",
+        ja: "OST Draw.io – 機会ソリューションツリー図",
+        "zh-Hant": "OST Draw.io – 機會解決樹圖表",
     }
 
     const descriptions: Record<Locale, string> = {
-        en: "Create AWS architecture diagrams, flowcharts, and technical diagrams using AI. Free online tool integrating draw.io with AI assistance for professional diagram creation.",
-        zh: "Use AI to create AWS architecture diagrams, flowcharts, and technical diagrams. Free online tool integrated with draw.io and AI assistance for professional diagram creation.",
-        ja: "Create AWS architecture diagrams, flowcharts, and technical diagrams using AI. Create professional diagrams with a free online tool that integrates draw.io with an AI assistant.",
+        en: "OST Draw.io – Generate Opportunity Solution Trees from context and problem statements. AI-powered diagramming for product discovery.",
+        zh: "OST Draw.io – 從情境與問題陳述生成機會解決樹。AI 驅動的產品探索圖表。",
+        ja: "OST Draw.io – コンテキストと問題提起から機会ソリューションツリーを生成。AI による図解。",
         "zh-Hant":
-            "使用 AI 建立 AWS 架構圖、流程圖和技術圖表。免費線上工具整合 draw.io 與 AI 輔助，輕鬆建立專業圖表。",
+            "OST Draw.io – 從情境與問題陳述生成機會解決樹。AI 驅動的產品探索圖表。",
     }
 
     return {
         title: titles[lang],
         description: descriptions[lang],
         keywords: [
-            "AI diagram generator",
-            "AWS architecture",
-            "flowchart creator",
+            "OST",
+            "Opportunity Solution Tree",
+            "diagram",
             "draw.io",
-            "AI drawing tool",
-            "technical diagrams",
-            "diagram automation",
-            "free diagram generator",
-            "online diagram maker",
+            "AI diagram",
+            "product discovery",
+            "outcome-focused",
         ],
-        authors: [{ name: "Next AI Draw.io" }],
-        creator: "Next AI Draw.io",
-        publisher: "Next AI Draw.io",
-        metadataBase: new URL("https://next-ai-drawio.jiang.jp"),
+        authors: [{ name: "OST Draw.io" }],
+        creator: "OST Draw.io",
+        publisher: "OST Draw.io",
+        metadataBase: new URL(baseUrl),
         openGraph: {
             title: titles[lang],
             description: descriptions[lang],
             type: "website",
-            url: "https://next-ai-drawio.jiang.jp",
-            siteName: "Next AI Draw.io",
+            url: baseUrl,
+            siteName: "OST Draw.io",
             locale:
                 lang === "zh"
                     ? "zh_CN"
@@ -98,7 +97,7 @@ export async function generateMetadata({
                     url: "/architecture.png",
                     width: 1200,
                     height: 630,
-                    alt: "Next AI Draw.io - AI-powered diagram creation tool",
+                    alt: "OST Draw.io – Opportunity Solution Tree diagramming",
                 },
             ],
         },
@@ -145,15 +144,16 @@ export default async function RootLayout({
     const validLang = lang as Locale
     const dictionary = await getDictionary(validLang)
 
+    const baseUrl = "https://ost-draw-io.example.com"
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        name: "Next AI Draw.io",
+        name: "OST Draw.io",
         applicationCategory: "DesignApplication",
         operatingSystem: "Web Browser",
         description:
-            "AI-powered diagram generator with targeted XML editing capabilities that integrates with draw.io for creating AWS architecture diagrams, flowcharts, and technical diagrams. Features diagram history, multi-provider AI support, and real-time collaboration.",
-        url: "https://next-ai-drawio.jiang.jp",
+            "OST Draw.io – Generate Opportunity Solution Trees from context and problem statements. AI-powered diagramming for product discovery.",
+        url: baseUrl,
         inLanguage: validLang,
         offers: {
             "@type": "Offer",

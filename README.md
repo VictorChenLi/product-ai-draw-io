@@ -1,23 +1,22 @@
-# Next AI Draw.io
+# OST Draw.io
 
 <div align="center">
 
-**AI-Powered Diagram Creation Tool - Chat, Draw, Visualize**
+**Opportunity Solution Tree diagramming – upload context and problem statement, generate OST with AI**
 
 English | [中文](./docs/cn/README_CN.md) | [日本語](./docs/ja/README_JA.md)
-
-[![TrendShift](https://trendshift.io/api/badge/repositories/15449)](https://next-ai-drawio.jiang.jp/)
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Next.js](https://img.shields.io/badge/Next.js-16.x-black)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.x-61dafb)](https://react.dev/)
-[![Sponsor](https://img.shields.io/badge/Sponsor-❤-ea4aaa)](https://github.com/sponsors/DayuanJiang)
-
-[![Live Demo](./public/live-demo-button.svg)](https://next-ai-drawio.jiang.jp/)
 
 </div>
 
-A Next.js web application that integrates AI capabilities with draw.io diagrams. Create, modify, and enhance diagrams through natural language commands and AI-assisted visualization.
+OST Draw.io is a Next.js app for generating **Opportunity Solution Trees (OST)** from context documents and problem statements. It is based on [next-ai-draw-io](https://github.com/DayuanJiang/next-ai-draw-io) and rebranded for OST-focused diagramming.
+
+**Plan & PRD:** [PRD](./PRD-ost-whiteboard-on-next-ai-draw-io.md) · [Implementation plan](./PLAN-ost-draw-io-architecture.md)
+
+**If you see `Can't resolve 'tailwindcss'`:** Run `npm run dev` from the **project root** (the folder that contains `package.json` and `postcss.config.mjs`). Open this folder in Cursor/VS Code (not the parent or a copy in Trash), then run the dev server from the integrated terminal.
 
 > Note: Thanks to <img src="https://raw.githubusercontent.com/DayuanJiang/next-ai-draw-io/main/public/doubao-color.png" alt="" height="20" /> [ByteDance Doubao](https://www.volcengine.com/activity/newyear-referral?utm_campaign=doubao&utm_content=aidrawio&utm_medium=github&utm_source=coopensrc&utm_term=project) sponsorship, the demo site now uses the powerful K2-thinking model!
 
@@ -27,7 +26,7 @@ https://github.com/user-attachments/assets/9d60a3e8-4a1c-4b5e-acbb-26af2d3eabd1
 
 
 ## Table of Contents
-- [Next AI Draw.io](#next-ai-drawio)
+- [OST Draw.io](#ost-drawio)
   - [Table of Contents](#table-of-contents)
   - [Examples](#examples)
   - [Features](#features)
