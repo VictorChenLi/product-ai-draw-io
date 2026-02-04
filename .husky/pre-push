@@ -1,4 +1,5 @@
 # Skip if node_modules not installed (e.g., on EC2 push server)
-if [ -d "node_modules" ]; then
+# Skip if npm not in PATH (e.g., GitHub Desktop uses a minimal PATH)
+if [ -d "node_modules" ] && command -v npm >/dev/null 2>&1; then
   npm run test -- --run
 fi
