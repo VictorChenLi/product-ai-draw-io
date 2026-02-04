@@ -176,6 +176,8 @@ interface ChatInputProps {
     // Focus control props
     shouldFocus?: boolean
     onFocused?: () => void
+    /** When true, Send is disabled (e.g. OST generation in progress) without showing Stop */
+    disableSend?: boolean
 }
 
 export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
@@ -200,6 +202,7 @@ export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
             showUnvalidatedModels = false,
             shouldFocus = false,
             onFocused,
+            disableSend = false,
         },
         ref,
     ) {
@@ -241,7 +244,8 @@ export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
         const [sendShortcut, setSendShortcut] = useState("ctrl-enter")
         // Allow retry when there's an error (even if status is still "streaming" or "submitted")
         const isDisabled =
-            (status === "streaming" || status === "submitted") && !error
+            (status === "streaming" || status === "submitted" || disableSend) &&
+            !error
 
         const adjustTextareaHeight = useCallback(() => {
             const textarea = textareaRef.current
@@ -576,10 +580,16 @@ export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
                                 disabled={isDisabled || !input.trim()}
                                 size="sm"
                                 className="h-8 px-4 rounded-xl font-medium shadow-sm"
-                                aria-label={dict.chat.send}
+                                aria-label={
+                                    disableSend
+                                        ? dict.chat.generating
+                                        : dict.chat.send
+                                }
                             >
                                 <Send className="h-4 w-4 mr-1.5" />
-                                {dict.chat.send}
+                                {disableSend
+                                    ? dict.chat.generating
+                                    : dict.chat.send}
                             </Button>
                         )}
                     </div>

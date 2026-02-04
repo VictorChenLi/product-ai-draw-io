@@ -35,6 +35,8 @@ export type ReasoningProps = ComponentProps<typeof Collapsible> & {
     defaultOpen?: boolean
     onOpenChange?: (open: boolean) => void
     duration?: number
+    /** When true, auto-collapse the reasoning block 1s after streaming ends. Default false so CoT stays visible (demo-like). */
+    autoCloseWhenComplete?: boolean
 }
 
 const AUTO_CLOSE_DELAY = 1000
@@ -48,6 +50,7 @@ export const Reasoning = memo(
         defaultOpen = true,
         onOpenChange,
         duration: durationProp,
+        autoCloseWhenComplete = false,
         children,
         ...props
     }: ReasoningProps) => {
@@ -76,10 +79,15 @@ export const Reasoning = memo(
             }
         }, [isStreaming, startTime, setDuration])
 
-        // Auto-open when streaming starts, auto-close when streaming ends (once only)
+        // Optional: auto-close when streaming ends (off by default so CoT stays visible like the demo)
         useEffect(() => {
-            if (defaultOpen && !isStreaming && isOpen && !hasAutoClosed) {
-                // Add a small delay before closing to allow user to see the content
+            if (
+                autoCloseWhenComplete &&
+                defaultOpen &&
+                !isStreaming &&
+                isOpen &&
+                !hasAutoClosed
+            ) {
                 const timer = setTimeout(() => {
                     setIsOpen(false)
                     setHasAutoClosed(true)
@@ -87,7 +95,14 @@ export const Reasoning = memo(
 
                 return () => clearTimeout(timer)
             }
-        }, [isStreaming, isOpen, defaultOpen, setIsOpen, hasAutoClosed])
+        }, [
+            autoCloseWhenComplete,
+            isStreaming,
+            isOpen,
+            defaultOpen,
+            setIsOpen,
+            hasAutoClosed,
+        ])
 
         const handleOpenChange = (newOpen: boolean) => {
             setIsOpen(newOpen)

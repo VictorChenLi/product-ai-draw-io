@@ -45,10 +45,10 @@ import { ChatMessageDisplay } from "./chat-message-display"
 import { DevXmlSimulator } from "./dev-xml-simulator"
 
 // localStorage keys for persistence
-const STORAGE_SESSION_ID_KEY = "next-ai-draw-io-session-id"
+const STORAGE_SESSION_ID_KEY = "ost-draw-io-session-id"
 
 // sessionStorage keys
-const SESSION_STORAGE_INPUT_KEY = "next-ai-draw-io-input"
+const SESSION_STORAGE_INPUT_KEY = "ost-draw-io-input"
 
 // Type for message parts (tool calls and their states)
 interface MessagePart {
@@ -134,6 +134,8 @@ export default function ChatPanel({
     const pathname = usePathname()
     const searchParams = useSearchParams()
     const urlSessionId = searchParams.get("session")
+
+    // OST generation is async and doesn't use useChat; keep UI in sync (disable send, clear input)
 
     const onFetchChart = (saveToHistory = true) => {
         return Promise.race([
@@ -764,7 +766,7 @@ export default function ChatPanel({
         e.preventDefault()
         const isProcessing = status === "streaming" || status === "submitted"
         if (input.trim() && !isProcessing) {
-            // Check if input matches a cached example (only when no messages yet)
+            // When no messages yet: try cached example, then OST generation, then fall back to chat
             if (messages.length === 0) {
                 const cached = findCachedResponse(
                     input.trim(),
@@ -772,10 +774,7 @@ export default function ChatPanel({
                 )
                 if (cached) {
                     // Add user message and fake assistant response to messages
-                    // The chat-message-display useEffect will handle displaying the diagram
                     const toolCallId = `cached-${Date.now()}`
-
-                    // Build user message text including any file content
                     const userText = await processFilesAndAppendContent(
                         input,
                         files,
@@ -783,7 +782,6 @@ export default function ChatPanel({
                         undefined,
                         urlData,
                     )
-
                     setMessages([
                         {
                             id: `user-${Date.now()}`,
@@ -810,6 +808,29 @@ export default function ChatPanel({
                     setUrlData(new Map())
                     return
                 }
+
+                // First message (not cached): use chat API so we get streaming + CoT + gradual diagram
+                const parts: any[] = []
+                const userText = await processFilesAndAppendContent(
+                    input,
+                    files,
+                    pdfData,
+                    parts,
+                    urlData,
+                )
+                parts.unshift({ type: "text", text: userText })
+
+                let chartXml = await onFetchChart()
+                chartXml = formatXML(chartXml)
+                chartXMLRef.current = chartXml
+                xmlSnapshotsRef.current.set(0, chartXml)
+
+                sendChatMessage(parts, chartXml, "", sessionId)
+                setInput("")
+                sessionStorage.removeItem(SESSION_STORAGE_INPUT_KEY)
+                setFiles([])
+                setUrlData(new Map())
+                return
             }
 
             try {
@@ -1080,6 +1101,22 @@ export default function ChatPanel({
         )
     }
 
+    // Example one-click: send first message via chat API so we get streaming + CoT + gradual diagram
+    const handleExampleSubmit = useCallback(
+        async (context: string) => {
+            const chartXml = formatXML((await onFetchChart()) || "")
+            chartXMLRef.current = chartXml
+            xmlSnapshotsRef.current.set(0, chartXml)
+            sendChatMessage(
+                [{ type: "text", text: context }],
+                chartXml,
+                "",
+                sessionId,
+            )
+        },
+        [onFetchChart, formatXML, sendChatMessage, sessionId],
+    )
+
     // Process files and append content to user text (handles PDF, text, and optionally images)
     const processFilesAndAppendContent = async (
         baseText: string,
@@ -1286,7 +1323,7 @@ export default function ChatPanel({
                                         ? "/favicon-white.svg"
                                         : "/favicon.ico"
                                 }
-                                alt="Next AI Drawio"
+                                alt={dict.nav.appTitle}
                                 width={isMobile ? 24 : 28}
                                 height={isMobile ? 24 : 28}
                                 className="rounded flex-shrink-0"
@@ -1294,7 +1331,7 @@ export default function ChatPanel({
                             <h1
                                 className={`${isMobile ? "text-sm" : "text-base"} font-semibold tracking-tight whitespace-nowrap`}
                             >
-                                Next AI Drawio
+                                {dict.nav.appTitle}
                             </h1>
                         </div>
                     </button>
@@ -1363,6 +1400,7 @@ export default function ChatPanel({
                     loadedMessageIdsRef={loadedMessageIdsRef}
                     validationStates={validationStates}
                     onImproveWithSuggestions={handleImproveWithSuggestions}
+                    onExampleSubmit={handleExampleSubmit}
                 />
             </main>
 
@@ -1401,6 +1439,9 @@ export default function ChatPanel({
                     showUnvalidatedModels={modelConfig.showUnvalidatedModels}
                     shouldFocus={shouldFocusInput}
                     onFocused={() => setShouldFocusInput(false)}
+                    disableSend={
+                        status === "streaming" || status === "submitted"
+                    }
                 />
             </footer>
 

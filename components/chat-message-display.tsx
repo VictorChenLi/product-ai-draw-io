@@ -10,6 +10,7 @@ import {
     FileCode,
     FileText,
     Link,
+    Loader2,
     Pencil,
     RotateCcw,
     ThumbsDown,
@@ -159,6 +160,7 @@ interface ChatMessageDisplayProps {
     loadedMessageIdsRef?: MutableRefObject<Set<string>>
     validationStates?: Record<string, ValidationState>
     onImproveWithSuggestions?: (feedback: string) => void
+    onExampleSubmit?: (example: string) => void
 }
 
 export function ChatMessageDisplay({
@@ -178,6 +180,7 @@ export function ChatMessageDisplay({
     loadedMessageIdsRef,
     validationStates = {},
     onImproveWithSuggestions,
+    onExampleSubmit,
 }: ChatMessageDisplayProps) {
     const dict = useDictionary()
     const { chartXML, loadDiagram: onDisplayChart } = useDiagram()
@@ -889,10 +892,14 @@ export function ChatMessageDisplay({
                                             }[] = []
 
                                             parts.forEach((part, index) => {
+                                                const partType = (
+                                                    part as { type?: string }
+                                                ).type
                                                 const isToolPart =
-                                                    part.type?.startsWith(
+                                                    partType?.startsWith(
                                                         "tool-",
-                                                    )
+                                                    ) ||
+                                                    partType === "ost-loading"
                                                 const isContentPart =
                                                     part.type === "text" ||
                                                     part.type === "file"
@@ -930,6 +937,9 @@ export function ChatMessageDisplay({
                                                     if (group.type === "tool") {
                                                         const toolPart = group
                                                             .parts[0] as ToolPartLike
+                                                        const isOSTLoading =
+                                                            toolPart.type ===
+                                                            "ost-loading"
                                                         const toolCallId =
                                                             toolPart.toolCallId
                                                         const isDisplayDiagram =
@@ -939,6 +949,26 @@ export function ChatMessageDisplay({
                                                             validationStates[
                                                                 toolCallId
                                                             ]
+
+                                                        if (isOSTLoading) {
+                                                            return (
+                                                                <div
+                                                                    key={`${message.id}-tool-${group.startIndex}`}
+                                                                    className="px-4 py-3 rounded-2xl rounded-bl-md bg-muted/60 text-foreground flex items-center gap-3"
+                                                                >
+                                                                    <Loader2 className="h-4 w-4 shrink-0 animate-spin text-primary" />
+                                                                    <span className="text-sm text-muted-foreground">
+                                                                        {dict
+                                                                            .chat
+                                                                            .generatingDiagram ??
+                                                                            dict
+                                                                                .chat
+                                                                                .generating ??
+                                                                            "Generating diagram…"}
+                                                                    </span>
+                                                                </div>
+                                                            )
+                                                        }
 
                                                         return (
                                                             <div

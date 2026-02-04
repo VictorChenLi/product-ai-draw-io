@@ -34,6 +34,7 @@ import {
     setTraceOutput,
     wrapWithObserve,
 } from "@/lib/langfuse"
+import { OST_SYSTEM_PROMPT } from "@/lib/ost/prompts"
 import { findServerModelById } from "@/lib/server-model-config"
 import { getSystemPrompt } from "@/lib/system-prompts"
 import { getUserIdFromRequest } from "@/lib/user-id"
@@ -244,8 +245,12 @@ async function handleChatRequest(req: Request): Promise<Response> {
         `[Prompt Caching] ${shouldCache ? "ENABLED" : "DISABLED"} for model: ${modelId}`,
     )
 
-    // Get the appropriate system prompt based on model (extended for Opus/Haiku 4.5)
-    const systemMessage = getSystemPrompt(modelId, minimalStyle)
+    // First message with empty diagram = OST generation: use OST prompt so we get streaming + CoT + display_diagram
+    const useOSTFirstMessage = isFirstMessage && isEmptyDiagram
+
+    const systemMessage = useOSTFirstMessage
+        ? OST_SYSTEM_PROMPT
+        : getSystemPrompt(modelId, minimalStyle)
 
     // Extract file parts (images) from the last user message
     const fileParts =
@@ -419,9 +424,7 @@ ${userInputText}
 
     // System messages with multiple cache breakpoints for optimal caching:
     // - Breakpoint 1: Static instructions (~1500 tokens) - rarely changes
-    // - Breakpoint 2: Current XML context - changes per diagram, but constant within a conversation turn
-    // This allows: if only user message changes, both system caches are reused
-    //              if XML changes, instruction cache is still reused
+    // - Breakpoint 2: Current XML context (or OST hint when first message)
     const systemMessages = [
         // Cache breakpoint 1: Instructions (rarely change)
         {
@@ -433,10 +436,12 @@ ${userInputText}
                 },
             }),
         },
-        // Cache breakpoint 2: Previous and Current diagram XML context
+        // Breakpoint 2: Diagram context (or minimal for OST first message)
         {
             role: "system" as const,
-            content: `${previousXml ? `Previous diagram XML (before user's last message):\n"""xml\n${previousXml}\n"""\n\n` : ""}Current diagram XML (AUTHORITATIVE - the source of truth):\n"""xml\n${xml || ""}\n"""\n\nIMPORTANT: The "Current diagram XML" is the SINGLE SOURCE OF TRUTH for what's on the canvas right now. The user can manually add, delete, or modify shapes directly in draw.io. Always count and describe elements based on the CURRENT XML, not on what you previously generated. If both previous and current XML are shown, compare them to understand what the user changed. When using edit_diagram, COPY search patterns exactly from the CURRENT XML - attribute order matters!`,
+            content: useOSTFirstMessage
+                ? "Current diagram: empty. Generate a new Opportunity Solution Tree from the user's context using the display_diagram tool."
+                : `${previousXml ? `Previous diagram XML (before user's last message):\n"""xml\n${previousXml}\n"""\n\n` : ""}Current diagram XML (AUTHORITATIVE - the source of truth):\n"""xml\n${xml || ""}\n"""\n\nIMPORTANT: The "Current diagram XML" is the SINGLE SOURCE OF TRUTH for what's on the canvas right now. The user can manually add, delete, or modify shapes directly in draw.io. Always count and describe elements based on the CURRENT XML, not on what you previously generated. If both previous and current XML are shown, compare them to understand what the user changed. When using edit_diagram, COPY search patterns exactly from the CURRENT XML - attribute order matters!`,
             ...(shouldCache && {
                 providerOptions: {
                     bedrock: { cachePoint: { type: "default" } },
