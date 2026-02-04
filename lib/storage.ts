@@ -3,28 +3,28 @@
 
 export const STORAGE_KEYS = {
     // Quota tracking
-    requestCount: "next-ai-draw-io-request-count",
-    requestDate: "next-ai-draw-io-request-date",
-    tokenCount: "next-ai-draw-io-token-count",
-    tokenDate: "next-ai-draw-io-token-date",
-    tpmCount: "next-ai-draw-io-tpm-count",
-    tpmMinute: "next-ai-draw-io-tpm-minute",
+    requestCount: "ost-draw-io-request-count",
+    requestDate: "ost-draw-io-request-date",
+    tokenCount: "ost-draw-io-token-count",
+    tokenDate: "ost-draw-io-token-date",
+    tpmCount: "ost-draw-io-tpm-count",
+    tpmMinute: "ost-draw-io-tpm-minute",
 
     // Settings
-    accessCode: "next-ai-draw-io-access-code",
-    accessCodeRequired: "next-ai-draw-io-access-code-required",
-    aiProvider: "next-ai-draw-io-ai-provider",
-    aiBaseUrl: "next-ai-draw-io-ai-base-url",
-    aiApiKey: "next-ai-draw-io-ai-api-key",
-    aiModel: "next-ai-draw-io-ai-model",
+    accessCode: "ost-draw-io-access-code",
+    accessCodeRequired: "ost-draw-io-access-code-required",
+    aiProvider: "ost-draw-io-ai-provider",
+    aiBaseUrl: "ost-draw-io-ai-base-url",
+    aiApiKey: "ost-draw-io-ai-api-key",
+    aiModel: "ost-draw-io-ai-model",
 
     // Multi-model configuration
-    modelConfigs: "next-ai-draw-io-model-configs",
-    selectedModelId: "next-ai-draw-io-selected-model-id",
+    modelConfigs: "ost-draw-io-model-configs",
+    selectedModelId: "ost-draw-io-selected-model-id",
 
     // Chat input preferences
-    sendShortcut: "next-ai-draw-io-send-shortcut",
+    sendShortcut: "ost-draw-io-send-shortcut",
 
     // Diagram validation
-    vlmValidationEnabled: "next-ai-draw-io-vlm-validation-enabled",
+    vlmValidationEnabled: "ost-draw-io-vlm-validation-enabled",
 } as const

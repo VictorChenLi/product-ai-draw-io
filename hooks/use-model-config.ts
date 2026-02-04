@@ -17,12 +17,12 @@ import {
     type ProviderName,
 } from "@/lib/types/model-config"
 
-// Old storage keys for migration
+// Old storage keys for migration (same as STORAGE_KEYS for ost-draw-io; no cross-app migration)
 const OLD_KEYS = {
-    aiProvider: "next-ai-draw-io-ai-provider",
-    aiBaseUrl: "next-ai-draw-io-ai-base-url",
-    aiApiKey: "next-ai-draw-io-ai-api-key",
-    aiModel: "next-ai-draw-io-ai-model",
+    aiProvider: STORAGE_KEYS.aiProvider,
+    aiBaseUrl: STORAGE_KEYS.aiBaseUrl,
+    aiApiKey: STORAGE_KEYS.aiApiKey,
+    aiModel: STORAGE_KEYS.aiModel,
 }
 
 /**

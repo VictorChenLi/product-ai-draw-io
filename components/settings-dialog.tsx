@@ -173,7 +173,7 @@ function SettingsContent({
 
     const changeLanguage = (lang: string) => {
         // Save locale to localStorage for persistence across restarts
-        localStorage.setItem("next-ai-draw-io-locale", lang)
+        localStorage.setItem("ost-draw-io-locale", lang)
 
         // Notify Electron main process to update its menu language
         if (window.electronAPI?.setUserLocale) {
