@@ -10,6 +10,7 @@ import {
     extractDiagramXML,
     isRealDiagram,
     validateAndFixXml,
+    wrapWithMxFile,
 } from "../lib/utils"
 
 interface DiagramContextType {
@@ -185,7 +186,11 @@ export function DiagramProvider({ children }: { children: React.ReactNode }) {
         chart: string,
         skipValidation?: boolean,
     ): string | null => {
-        let xmlToLoad = chart
+        // OST/display_diagram may pass bare mxCells; draw.io requires a single-root mxfile
+        let xmlToLoad =
+            chart.trim() && !chart.includes("<mxfile")
+                ? wrapWithMxFile(chart)
+                : chart
 
         // Validate XML structure before loading (unless skipped for internal use)
         if (!skipValidation) {
