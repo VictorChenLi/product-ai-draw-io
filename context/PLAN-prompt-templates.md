@@ -11,25 +11,25 @@ Redesign “quick examples” as **prompt templates**: when the user selects a t
 ## Progress Tracker (Checklist)
 
 ### Phase 0: Foundation (registry, types, user-flow prompt)
-- [ ] [0.1](#01-template-registry-and-types) Template registry and types
-- [ ] [0.2](#02-user-flow-system-prompt) User-flow system prompt
+- [x] [0.1](#01-template-registry-and-types) Template registry and types
+- [x] [0.2](#02-user-flow-system-prompt) User-flow system prompt
 
 ### Phase 1: API (chat route)
-- [ ] [1.1](#11-chat-api-read-prompttemplateid-select-system-prompt) Chat API: read `promptTemplateId`, select system prompt
+- [x] [1.1](#11-chat-api-read-prompttemplateid-select-system-prompt) Chat API: read `promptTemplateId`, select system prompt
 
 ### Phase 2: i18n
-- [ ] [2.1](#21-prompt-template-dictionary-keys) Prompt template dictionary keys
+- [x] [2.1](#21-prompt-template-dictionary-keys) Prompt template dictionary keys
 
 ### Phase 3: Client state and request body
-- [ ] [3.1](#31-selected-prompt-template-state) Selected prompt template state
-- [ ] [3.2](#32-pass-prompttemplateid-in-chat-request-body) Pass `promptTemplateId` in chat request body
+- [x] [3.1](#31-selected-prompt-template-state) Selected prompt template state
+- [x] [3.2](#32-pass-prompttemplateid-in-chat-request-body) Pass `promptTemplateId` in chat request body
 
 ### Phase 4: UI (placeholder and lobby)
-- [ ] [4.1](#41-chat-input-placeholder-from-selected-template) Chat input placeholder from selected template
-- [ ] [4.2](#42-lobby-redesign-quick-examples-as-two-template-cards) Lobby: redesign quick examples as two template cards
+- [x] [4.1](#41-chat-input-placeholder-from-selected-template) Chat input placeholder from selected template
+- [x] [4.2](#42-lobby-redesign-quick-examples-as-two-template-cards) Lobby: redesign quick examples as two template cards
 
 ### Phase 5: Optional and validation
-- [ ] [5.1](#51-optional-persist-last-used-template) Optional: persist last-used template
+- [x] [5.1](#51-optional-persist-last-used-template) Optional: persist last-used template
 - [ ] [5.2](#52-manual-test-and-cleanup) Manual test and cleanup
 
 ---
