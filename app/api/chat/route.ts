@@ -35,8 +35,10 @@ import {
     wrapWithObserve,
 } from "@/lib/langfuse"
 import { OST_SYSTEM_PROMPT } from "@/lib/ost/prompts"
+import { getSystemPromptKeyForTemplate } from "@/lib/prompt-templates"
 import { findServerModelById } from "@/lib/server-model-config"
 import { getSystemPrompt } from "@/lib/system-prompts"
+import { USER_FLOW_SYSTEM_PROMPT } from "@/lib/user-flow/prompts"
 import { getUserIdFromRequest } from "@/lib/user-id"
 
 export const maxDuration = 120
@@ -90,7 +92,13 @@ async function handleChatRequest(req: Request): Promise<Response> {
         }
     }
 
-    const { messages, xml, previousXml, sessionId } = await req.json()
+    const body = await req.json()
+    const { messages, xml, previousXml, sessionId } = body
+    const promptTemplateId =
+        typeof body.promptTemplateId === "string"
+            ? body.promptTemplateId.trim()
+            : undefined
+    const templateId = getSystemPromptKeyForTemplate(promptTemplateId) ?? null
 
     // Get user ID for Langfuse tracking and quota
     const userId = getUserIdFromRequest(req)
@@ -245,11 +253,13 @@ async function handleChatRequest(req: Request): Promise<Response> {
         `[Prompt Caching] ${shouldCache ? "ENABLED" : "DISABLED"} for model: ${modelId}`,
     )
 
-    // First message with empty diagram = OST generation: use OST prompt so we get streaming + CoT + display_diagram
+    // First message with empty diagram = template-based generation (OST or user-flow): use template prompt for streaming + CoT + display_diagram
     const useOSTFirstMessage = isFirstMessage && isEmptyDiagram
 
     const systemMessage = useOSTFirstMessage
-        ? OST_SYSTEM_PROMPT
+        ? templateId === "user-flow"
+            ? USER_FLOW_SYSTEM_PROMPT
+            : OST_SYSTEM_PROMPT
         : getSystemPrompt(modelId, minimalStyle)
 
     // Extract file parts (images) from the last user message
@@ -436,11 +446,13 @@ ${userInputText}
                 },
             }),
         },
-        // Breakpoint 2: Diagram context (or minimal for OST first message)
+        // Breakpoint 2: Diagram context (or minimal for template first message)
         {
             role: "system" as const,
             content: useOSTFirstMessage
-                ? "Current diagram: empty. Generate a new Opportunity Solution Tree from the user's context using the display_diagram tool."
+                ? templateId === "user-flow"
+                    ? "Current diagram: empty. Generate a new user flow from the user's context using the display_diagram tool."
+                    : "Current diagram: empty. Generate a new Opportunity Solution Tree from the user's context using the display_diagram tool."
                 : `${previousXml ? `Previous diagram XML (before user's last message):\n"""xml\n${previousXml}\n"""\n\n` : ""}Current diagram XML (AUTHORITATIVE - the source of truth):\n"""xml\n${xml || ""}\n"""\n\nIMPORTANT: The "Current diagram XML" is the SINGLE SOURCE OF TRUTH for what's on the canvas right now. The user can manually add, delete, or modify shapes directly in draw.io. Always count and describe elements based on the CURRENT XML, not on what you previously generated. If both previous and current XML are shown, compare them to understand what the user changed. When using edit_diagram, COPY search patterns exactly from the CURRENT XML - attribute order matters!`,
             ...(shouldCache && {
                 providerOptions: {
