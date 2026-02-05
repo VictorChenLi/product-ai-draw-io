@@ -35,6 +35,7 @@ import Image from "@/components/image-with-basepath"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useDictionary } from "@/hooks/use-dictionary"
 import { getApiEndpoint } from "@/lib/base-path"
+import type { PromptTemplateId } from "@/lib/prompt-templates"
 import {
     applyDiagramOperations,
     convertToLegalXml,
@@ -161,6 +162,8 @@ interface ChatMessageDisplayProps {
     validationStates?: Record<string, ValidationState>
     onImproveWithSuggestions?: (feedback: string) => void
     onExampleSubmit?: (example: string) => void
+    selectedPromptTemplateId?: PromptTemplateId | null
+    onSelectPromptTemplate?: (templateId: PromptTemplateId) => void
 }
 
 export function ChatMessageDisplay({
@@ -181,6 +184,8 @@ export function ChatMessageDisplay({
     validationStates = {},
     onImproveWithSuggestions,
     onExampleSubmit,
+    selectedPromptTemplateId,
+    onSelectPromptTemplate,
 }: ChatMessageDisplayProps) {
     const dict = useDictionary()
     const { chartXML, loadDiagram: onDisplayChart } = useDiagram()
@@ -654,6 +659,8 @@ export function ChatMessageDisplay({
                     setInput={setInput}
                     setFiles={setFiles}
                     dict={dict}
+                    selectedPromptTemplateId={selectedPromptTemplateId}
+                    onSelectPromptTemplate={onSelectPromptTemplate}
                 />
             ) : messages.length === 0 ? null : (
                 <div className="py-4 px-4 space-y-4">

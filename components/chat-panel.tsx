@@ -34,6 +34,7 @@ import { getApiEndpoint } from "@/lib/base-path"
 import { findCachedResponse } from "@/lib/cached-responses"
 import { formatMessage } from "@/lib/i18n/utils"
 import { isPdfFile, isTextFile } from "@/lib/pdf-utils"
+import type { PromptTemplateId } from "@/lib/prompt-templates"
 import { sanitizeMessages } from "@/lib/session-storage"
 import { STORAGE_KEYS } from "@/lib/storage"
 import type { UrlData } from "@/lib/url-utils"
@@ -183,6 +184,28 @@ export default function ChatPanel({
     const [minimalStyle, setMinimalStyle] = useState(false)
     const [vlmValidationEnabled, setVlmValidationEnabled] = useState(false)
     const [shouldFocusInput, setShouldFocusInput] = useState(false)
+    const [selectedPromptTemplateId, setSelectedPromptTemplateId] =
+        useState<PromptTemplateId | null>(() => {
+            if (typeof window === "undefined") return "ost"
+            const saved = sessionStorage.getItem(STORAGE_KEYS.promptTemplateId)
+            return saved === "ost" || saved === "user-flow" ? saved : "ost"
+        })
+    const inputPlaceholder =
+        selectedPromptTemplateId === "ost"
+            ? dict.promptTemplates?.ost?.placeholder
+            : selectedPromptTemplateId === "user-flow"
+              ? dict.promptTemplates?.userFlow?.placeholder
+              : dict.chat.placeholder
+
+    // Persist selected prompt template so refresh/new chat keeps the same template
+    useEffect(() => {
+        if (selectedPromptTemplateId) {
+            sessionStorage.setItem(
+                STORAGE_KEYS.promptTemplateId,
+                selectedPromptTemplateId,
+            )
+        }
+    }, [selectedPromptTemplateId])
 
     // Restore input from sessionStorage on mount (when ChatPanel remounts due to key change)
     useEffect(() => {
@@ -1058,7 +1081,14 @@ export default function ChatPanel({
         sendMessage(
             { parts },
             {
-                body: { xml, previousXml, sessionId },
+                body: {
+                    xml,
+                    previousXml,
+                    sessionId,
+                    ...(selectedPromptTemplateId && {
+                        promptTemplateId: selectedPromptTemplateId,
+                    }),
+                },
                 headers: {
                     "x-access-code": config.accessCode,
                     ...(config.aiProvider && {
@@ -1401,6 +1431,8 @@ export default function ChatPanel({
                     validationStates={validationStates}
                     onImproveWithSuggestions={handleImproveWithSuggestions}
                     onExampleSubmit={handleExampleSubmit}
+                    selectedPromptTemplateId={selectedPromptTemplateId}
+                    onSelectPromptTemplate={setSelectedPromptTemplateId}
                 />
             </main>
 
@@ -1417,8 +1449,41 @@ export default function ChatPanel({
 
             {/* Input */}
             <footer
-                className={`${isMobile ? "p-2" : "p-4"} border-t border-border/50 bg-card/50`}
+                className={`${isMobile ? "p-2" : "p-4"} border-t border-border/50 bg-card/50 space-y-2`}
             >
+                {/* Template selector: always visible so user can switch with full context */}
+                <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-xs font-medium text-muted-foreground shrink-0">
+                        {dict.chat?.templateLabel ?? "Template"}
+                    </span>
+                    <div className="flex rounded-lg border border-border/60 bg-muted/30 p-0.5">
+                        <button
+                            type="button"
+                            onClick={() => setSelectedPromptTemplateId("ost")}
+                            className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+                                selectedPromptTemplateId === "ost"
+                                    ? "bg-primary text-primary-foreground shadow-sm"
+                                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                            }`}
+                        >
+                            {dict.promptTemplates?.ost?.shortLabel ?? "OST"}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() =>
+                                setSelectedPromptTemplateId("user-flow")
+                            }
+                            className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+                                selectedPromptTemplateId === "user-flow"
+                                    ? "bg-primary text-primary-foreground shadow-sm"
+                                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                            }`}
+                        >
+                            {dict.promptTemplates?.userFlow?.shortLabel ??
+                                "User flow"}
+                        </button>
+                    </div>
+                </div>
                 <ChatInput
                     input={input}
                     status={status}
@@ -1442,6 +1507,7 @@ export default function ChatPanel({
                     disableSend={
                         status === "streaming" || status === "submitted"
                     }
+                    placeholder={inputPlaceholder}
                 />
             </footer>
 

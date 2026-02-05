@@ -25,6 +25,9 @@ export const STORAGE_KEYS = {
     // Chat input preferences
     sendShortcut: "ost-draw-io-send-shortcut",
 
+    // Prompt template (sessionStorage: last-used template for new chats)
+    promptTemplateId: "ost-draw-io-prompt-template-id",
+
     // Diagram validation
     vlmValidationEnabled: "ost-draw-io-vlm-validation-enabled",
 } as const

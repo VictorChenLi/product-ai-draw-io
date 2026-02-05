@@ -21,6 +21,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import type { PromptTemplateId } from "@/lib/prompt-templates"
 
 interface SessionMetadata {
     id: string
@@ -52,6 +53,8 @@ interface ChatLobbyProps {
             cancel: string
         }
     }
+    selectedPromptTemplateId?: PromptTemplateId | null
+    onSelectPromptTemplate?: (templateId: PromptTemplateId) => void
 }
 
 // Helper to format session date
@@ -82,6 +85,8 @@ export function ChatLobby({
     setInput,
     setFiles,
     dict,
+    selectedPromptTemplateId,
+    onSelectPromptTemplate,
 }: ChatLobbyProps) {
     // Track whether examples section is expanded (collapsed by default when there's history)
     const [examplesExpanded, setExamplesExpanded] = useState(false)
@@ -95,7 +100,14 @@ export function ChatLobby({
 
     if (!hasHistory) {
         // Show full examples when no history
-        return <ExamplePanel setInput={setInput} setFiles={setFiles} />
+        return (
+            <ExamplePanel
+                setInput={setInput}
+                setFiles={setFiles}
+                selectedPromptTemplateId={selectedPromptTemplateId}
+                onSelectPromptTemplate={onSelectPromptTemplate}
+            />
+        )
     }
 
     // Show history + collapsible examples when there are sessions
@@ -229,6 +241,8 @@ export function ChatLobby({
                             setInput={setInput}
                             setFiles={setFiles}
                             minimal
+                            selectedPromptTemplateId={selectedPromptTemplateId}
+                            onSelectPromptTemplate={onSelectPromptTemplate}
                         />
                     </div>
                 )}

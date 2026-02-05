@@ -178,6 +178,8 @@ interface ChatInputProps {
     onFocused?: () => void
     /** When true, Send is disabled (e.g. OST generation in progress) without showing Stop */
     disableSend?: boolean
+    /** Override placeholder (e.g. from selected prompt template); falls back to dict.chat.placeholder */
+    placeholder?: string
 }
 
 export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
@@ -203,6 +205,7 @@ export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
             shouldFocus = false,
             onFocused,
             disableSend = false,
+            placeholder: placeholderProp,
         },
         ref,
     ) {
@@ -481,7 +484,7 @@ export const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
                         onChange={handleChange}
                         onKeyDown={handleKeyDown}
                         onPaste={handlePaste}
-                        placeholder={dict.chat.placeholder}
+                        placeholder={placeholderProp ?? dict.chat.placeholder}
                         disabled={isDisabled}
                         aria-label="Chat input"
                         className="min-h-[60px] max-h-[200px] resize-none border-0 bg-transparent px-4 py-3 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-muted-foreground/60 scrollbar-thin"
