@@ -56,12 +56,13 @@
         "clickToEdit": "Click to edit",
         "editMessage": "Edit message",
         "saveAndSubmit": "Save & Submit",
-        "ExtractURL": "Extract from URL"
+        "ExtractURL": "Extract from URL",
+        "templateLabel": "Template"
     },
     "examples": {
         "title": "Create OST with AI",
         "subtitle": "Upload a problem statement or context doc to generate an Opportunity Solution Tree",
-        "quickExamples": "Quick Examples",
+        "quickExamples": "Templates",
         "paperToDiagram": "Generate OST from product brief",
         "paperDescription": "Upload a product brief or doc to generate an OST",
         "animatedDiagram": "OST from user research",
@@ -76,6 +77,20 @@
         "mcpServer": "MCP Server",
         "mcpDescription": "Use in Claude Desktop, VS Code & Cursor",
         "preview": "PREVIEW"
+    },
+    "promptTemplates": {
+        "ost": {
+            "label": "Generate OST from research or meeting notes",
+            "shortLabel": "OST",
+            "description": "Upload or paste research, meeting notes, or problem statement to generate an Opportunity Solution Tree.",
+            "placeholder": "Paste research, meeting notes, or problem statement… (or upload a file)"
+        },
+        "userFlow": {
+            "label": "Generate user flow for a solution",
+            "shortLabel": "User flow",
+            "description": "Upload or paste solution description or user flow notes to generate a user flow diagram.",
+            "placeholder": "Paste solution description or user flow notes… (or upload a file)"
+        }
     },
     "settings": {
         "title": "Settings",

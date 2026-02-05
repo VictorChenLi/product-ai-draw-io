@@ -56,12 +56,13 @@
         "clickToEdit": "クリックして編集",
         "editMessage": "メッセージを編集",
         "saveAndSubmit": "保存して送信",
-        "ExtractURL": "URLから抽出"
+        "ExtractURL": "URLから抽出",
+        "templateLabel": "テンプレート"
     },
     "examples": {
         "title": "AI で OST を作成",
         "subtitle": "問題提起またはコンテキスト文書をアップロードして機会ソリューションツリーを生成",
-        "quickExamples": "クイック例",
+        "quickExamples": "テンプレート",
         "paperToDiagram": "プロダクトブリーフから OST を生成",
         "paperDescription": "プロダクトブリーフや文書をアップロードして OST を生成",
         "animatedDiagram": "ユーザーリサーチから OST",
@@ -76,6 +77,20 @@
         "mcpServer": "MCP サーバー",
         "mcpDescription": "Claude Desktop、VS Code、Cursor で使用",
         "preview": "プレビュー"
+    },
+    "promptTemplates": {
+        "ost": {
+            "label": "リサーチ・議事メモから OST を生成",
+            "shortLabel": "OST",
+            "description": "リサーチ、議事メモ、または問題提起をアップロードまたは貼り付けて、機会ソリューションツリーを生成します。",
+            "placeholder": "リサーチ、議事メモ、または問題提起を貼り付け…（またはファイルをアップロード）"
+        },
+        "userFlow": {
+            "label": "ソリューションのユーザーフローを生成",
+            "shortLabel": "ユーザーフロー",
+            "description": "ソリューションの説明やユーザーフローメモをアップロードまたは貼り付けて、ユーザーフロー図を生成します。",
+            "placeholder": "ソリューションの説明またはユーザーフローメモを貼り付け…（またはファイルをアップロード）"
+        }
     },
     "settings": {
         "title": "設定",

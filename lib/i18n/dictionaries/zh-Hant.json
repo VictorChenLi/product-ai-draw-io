@@ -56,12 +56,13 @@
         "clickToEdit": "點擊編輯",
         "editMessage": "編輯訊息",
         "saveAndSubmit": "儲存並提交",
-        "ExtractURL": "從 URL 擷取"
+        "ExtractURL": "從 URL 擷取",
+        "templateLabel": "範本"
     },
     "examples": {
         "title": "用 AI 建立機會解決樹",
         "subtitle": "上傳問題陳述或情境文件以產生機會解決樹",
-        "quickExamples": "快速範例",
+        "quickExamples": "範本",
         "paperToDiagram": "從產品簡報產生 OST",
         "paperDescription": "上傳產品簡報或文件以產生 OST",
         "animatedDiagram": "從使用者研究產生 OST",
@@ -76,6 +77,20 @@
         "mcpServer": "MCP 伺服器",
         "mcpDescription": "在 Claude Desktop、VS Code 和 Cursor 中使用",
         "preview": "預覽"
+    },
+    "promptTemplates": {
+        "ost": {
+            "label": "從研究或會議記錄產生 OST",
+            "shortLabel": "OST",
+            "description": "上傳或貼上研究、會議記錄或問題陳述以產生機會解決樹。",
+            "placeholder": "貼上研究、會議記錄或問題陳述…（或上傳檔案）"
+        },
+        "userFlow": {
+            "label": "產生解決方案的使用者流程",
+            "shortLabel": "使用者流程",
+            "description": "上傳或貼上解決方案描述或使用者流程說明以產生使用者流程圖。",
+            "placeholder": "貼上解決方案描述或使用者流程說明…（或上傳檔案）"
+        }
     },
     "settings": {
         "title": "設定",
